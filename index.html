@@ -59,16 +59,17 @@
             <!-- Profile Avatar Container -->
             <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-b from-gray-500/40 to-gray-800/40 border border-gray-600/50 shadow-lg mb-3.5 overflow-hidden">
                 <img 
+                    id="profile-avatar"
                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
-                    onerror="this.src='https://placehold.co/150x150/2a2438/ffffff?text=SC'"
-                    alt="Sanduni Chamodi" 
+                    onerror="this.src='https://placehold.co/150x150/2a2438/ffffff?text=MZ'"
+                    alt="Foto de Perfil" 
                     class="w-full h-full object-cover rounded-full"
                 >
             </div>
 
             <!-- Name -->
-            <h1 class="text-2xl sm:text-[26px] font-extrabold tracking-tight text-white mb-1.5">
-                Sanduni Chamodi
+            <h1 id="profile-name" class="text-2xl sm:text-[26px] font-extrabold tracking-tight text-white mb-1.5">
+                Neyma Macuácua
             </h1>
 
             <!-- Subtitle / Bio in Mozambican Portuguese -->
@@ -235,6 +236,46 @@
 
     <script>
         let toastTimeout;
+
+        // List of authentic Mozambican female names and surnames
+        const mozambicanFemaleNames = [
+            "Neyma Macuácua",
+            "Zenaida Cossa",
+            "Damares Mondlane",
+            "Yolanda Sithole",
+            "Tânia Mabote",
+            "inocência Nhantumbo",
+            "Chidinma Matsinhe",
+            "Lurdes Chissano",
+            "Aida Mucavel",
+            "Melba Langa",
+            "Nádia Tembe",
+            "Cremilda Bila",
+            "Fátima Machava",
+            "Sheila Guambe",
+            "Vânia Nhampossa"
+        ];
+
+        // Randomly select and display a Mozambican female name on load
+        function setRandomMozambicanName() {
+            const randomIndex = Math.floor(Math.random() * mozambicanFemaleNames.length);
+            const selectedName = mozambicanFemaleNames[randomIndex];
+            // Capitalize properly
+            const formattedName = selectedName.replace(/\b\w/g, char => char.toUpperCase());
+
+            const nameElement = document.getElementById('profile-name');
+            const avatarElement = document.getElementById('profile-avatar');
+
+            if (nameElement) {
+                nameElement.textContent = formattedName;
+            }
+            if (avatarElement) {
+                avatarElement.alt = formattedName;
+            }
+            document.title = `${formattedName} - Página de Perfil`;
+        }
+
+        window.addEventListener('DOMContentLoaded', setRandomMozambicanName);
 
         // Custom non-blocking notification function
         function showMessage(msg) {
