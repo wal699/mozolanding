@@ -2,6 +2,332 @@
 <html lang="pt-MZ">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Maria - Página de Perfil</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Noto Sans Sinhala -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            font-family: 'Inter', 'Noto Sans Sinhala', sans-serif;
+            background: radial-gradient(circle at 80% 30%, #101e2b 0%, #070b12 60%, #05070b 100%);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Custom subtle gradient for the top profile card */
+        .profile-card-bg {
+            background: radial-gradient(circle at 50% 0%, #2a2438 0%, #151421 55%, #12121c 100%);
+        }
+
+        /* Smooth hover transitions for interactive rows */
+        .link-row {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .link-row:hover {
+            transform: translateY(-2px);
+            background-color: #272936;
+            border-color: #4b5563;
+        }
+        .link-row:active {
+            transform: scale(0.98);
+        }
+
+        /* Pulse animation for the CTA banner buttons */
+        @keyframes pulse-fast {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+        .animate-cta {
+            animation: pulse-fast 1.6s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-white flex flex-col items-center justify-start sm:justify-center p-0 sm:p-6 antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Toast Notification Box (Replaces native alert) -->
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-800/95 backdrop-blur-md border border-slate-600 text-white px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2.5 transition-all duration-300 w-[90%] max-w-[340px] justify-center">
+        <span class="w-2.5 h-2.5 shrink-0 rounded-full bg-emerald-400 animate-ping"></span>
+        <span id="toast-message" class="text-xs sm:text-sm font-medium truncate">Acção iniciada!</span>
+    </div>
+
+    <!-- Main Outer Frame: Full edge-to-edge fit on mobile, card frame on desktop -->
+    <main class="w-full max-w-[460px] min-h-[100dvh] sm:min-h-0 bg-[#0d111a] sm:bg-[#0d111a]/95 border-0 sm:border sm:border-[#262936] rounded-none sm:rounded-[30px] px-3.5 py-4 sm:p-5 shadow-none sm:shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col justify-between gap-2.5 sm:gap-3.5">
+
+        <!-- 1. Top Profile Header Card -->
+        <section onclick="triggerAdRedirect('A abrir perfil completo...')" class="cursor-pointer profile-card-bg border border-[#262738] rounded-[20px] p-4 sm:p-6 flex flex-col items-center text-center shadow-inner relative overflow-hidden">
+            <!-- Profile Avatar Container -->
+            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-1 bg-gradient-to-b from-gray-500/40 to-gray-800/40 border border-gray-600/50 shadow-lg mb-2.5 sm:mb-3.5 overflow-hidden">
+                <img 
+                    id="profile-avatar"
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
+                    onerror="this.src='https://placehold.co/150x150/2a2438/ffffff?text=MZ'"
+                    alt="Foto de Perfil" 
+                    class="w-full h-full object-cover rounded-full"
+                >
+            </div>
+
+            <!-- Name -->
+            <h1 id="profile-name" class="text-xl sm:text-[26px] font-extrabold tracking-tight text-white mb-1">
+                Neyma Macuácua
+            </h1>
+
+            <!-- Subtitle / Bio in Mozambican Portuguese -->
+            <p class="text-[#d1d5db] text-xs sm:text-[15px] font-semibold mb-3 leading-snug max-w-[92%]">
+                Junta-te a mim e vamos curtir um bom momento
+            </p>
+
+            <!-- Location Pill -->
+            <div class="inline-flex items-center justify-center bg-[#282836] border border-[#39394d] rounded-full px-3.5 py-1 text-xs font-bold text-gray-200 shadow-sm">
+                <span>em Maputo</span>
+            </div>
+        </section>
+
+        <!-- 2. Social Action Buttons (WhatsApp & Telegram) -->
+        <section class="grid grid-cols-2 gap-2.5 sm:gap-3">
+            <!-- WhatsApp Button -->
+            <button onclick="triggerAdRedirect('A abrir o WhatsApp...')" class="bg-[#25d366] hover:bg-[#20bd5a] active:scale-[0.98] text-white font-bold text-sm sm:text-base py-3 sm:py-3.5 px-3 rounded-[13px] shadow-md transition-all flex items-center justify-center">
+                WhatsApp
+            </button>
+
+            <!-- Telegram Button -->
+            <button onclick="triggerAdRedirect('A abrir o Telegram...')" class="bg-[#24a1de] hover:bg-[#1f8fc7] active:scale-[0.98] text-white font-bold text-sm sm:text-base py-3 sm:py-3.5 px-3 rounded-[13px] shadow-md transition-all flex items-center justify-center">
+                Telegram
+            </button>
+        </section>
+
+        <!-- 3. Navigation Link Rows (Photos, Videos, Live) -->
+        <nav class="space-y-2 sm:space-y-3">
+            <!-- Photos -->
+            <a href="#photos" onclick="event.preventDefault(); triggerAdRedirect('A carregar a Galeria de Fotos...')" class="link-row w-full bg-[#1e202b] border border-[#323544] rounded-[13px] px-4 py-3 sm:px-5 sm:py-4 flex items-center justify-between text-white font-bold text-sm sm:text-[15px] shadow-sm">
+                <span>Fotos</span>
+                <svg class="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16"></path>
+                </svg>
+            </a>
+
+            <!-- Videos -->
+            <a href="#videos" onclick="event.preventDefault(); triggerAdRedirect('A carregar Vídeos Exclusivos...')" class="link-row w-full bg-[#1e202b] border border-[#323544] rounded-[13px] px-4 py-3 sm:px-5 sm:py-4 flex items-center justify-between text-white font-bold text-sm sm:text-[15px] shadow-sm">
+                <span>Vídeos</span>
+                <svg class="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16"></path>
+                </svg>
+            </a>
+
+            <!-- Live -->
+            <a href="#live" onclick="event.preventDefault(); triggerAdRedirect('A ligar à transmissão em directo...')" class="link-row w-full bg-[#1e202b] border border-[#323544] rounded-[13px] px-4 py-3 sm:px-5 sm:py-4 flex items-center justify-between text-white font-bold text-sm sm:text-[15px] shadow-sm">
+                <span>Em Directo</span>
+                <svg class="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16"></path>
+                </svg>
+            </a>
+        </nav>
+
+        <!-- 4. Promotional Light Banner 1 -->
+        <section onclick="triggerAdRedirect('A redireccionar para a Oferta em Destaque #1...')" class="cursor-pointer bg-[#f6f5e8] rounded-[13px] p-2 border border-gray-300 shadow-md active:scale-[0.99] transition-all">
+            <div class="bg-white rounded-lg px-1.5 py-1.5 flex items-center justify-between gap-1 relative overflow-hidden min-h-[60px]">
+                <!-- Left Image + Pointing Hand -->
+                <div class="flex items-center space-x-0.5 z-10 shrink-0">
+                    <span class="text-xl sm:text-2xl select-none">👉🏼</span>
+                    <img 
+                        src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80" 
+                        onerror="this.src='https://placehold.co/60x60/e2e8f0/1e293b?text=Img'"
+                        alt="Promo Left" 
+                        class="w-10 h-10 sm:w-13 sm:h-13 rounded-md object-cover border border-gray-200"
+                    >
+                </div>
+
+                <!-- Center Portuguese Text + Red Click Here Pill -->
+                <div class="flex flex-col items-center justify-center text-center px-1 z-10 flex-1 min-w-0">
+                    <p class="text-black font-extrabold text-[11px] sm:text-[13px] leading-tight mb-1 line-clamp-2">
+                        Vê os vídeos mais recentes de Moçambique
+                    </p>
+                    <div class="animate-cta bg-red-600 text-white text-[9px] sm:text-[11px] font-extrabold px-2.5 py-0.5 rounded-full shadow flex items-center gap-1 uppercase tracking-wider whitespace-nowrap">
+                        <span>CLICA AQUI</span>
+                        <span>👆</span>
+                    </div>
+                </div>
+
+                <!-- Right Image + Pointing Hand -->
+                <div class="flex items-center space-x-0.5 z-10 shrink-0">
+                    <img 
+                        src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=120&q=80" 
+                        onerror="this.src='https://placehold.co/60x60/e2e8f0/1e293b?text=Img'"
+                        alt="Promo Right" 
+                        class="w-10 h-10 sm:w-13 sm:h-13 rounded-md object-cover border border-gray-200"
+                    >
+                    <span class="text-xl sm:text-2xl select-none">👈🏼</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Interactive "Book ONLINE" Card -->
+        <section class="bg-[#152836] border border-[#27465c] rounded-[15px] p-3.5 sm:p-5 space-y-2 sm:space-y-3 shadow-md">
+            <!-- Header Row -->
+            <div class="flex items-center space-x-2">
+                <h2 class="text-white font-bold text-sm sm:text-base">Marcar</h2>
+                <span class="bg-[#0e4f44] border border-[#19826f] text-[#4ade80] text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full tracking-wider uppercase">
+                    ONLINE
+                </span>
+            </div>
+
+            <!-- Question / Prompt Text -->
+            <p class="text-gray-200 text-xs sm:text-[15px] leading-relaxed font-medium">
+                Estou pronta para ficar do jeito que tu quiseres, gostas de mim?
+            </p>
+
+            <!-- Interactive Response Input / Button -->
+            <div class="pt-0.5">
+                <button 
+                    onclick="handleBookingResponse(this)"
+                    class="w-full text-left bg-[#0e2231] hover:bg-[#132c40] active:scale-[0.99] border border-[#3d5a73] rounded-full px-4 py-2 sm:px-5 sm:py-2.5 text-white font-semibold text-xs sm:text-[15px] transition-all flex items-center justify-between group"
+                >
+                    <span id="booking-answer">Sim</span>
+                    <span class="text-[11px] text-sky-400 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity font-normal">
+                        Enviar →
+                    </span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 6. Promotional Dark Banner 2 -->
+        <section onclick="triggerAdRedirect('A redireccionar para a Oferta em Destaque #2...')" class="cursor-pointer bg-[#f6f5e8] rounded-[13px] p-2 border border-gray-300 shadow-md active:scale-[0.99] transition-all">
+            <div class="bg-black rounded-lg px-2 py-1.5 flex items-center justify-between gap-1 relative overflow-hidden min-h-[60px]">
+                <!-- Left Hand Icon -->
+                <div class="flex items-center z-10 shrink-0">
+                    <span class="text-xl sm:text-2xl select-none">👉🏼</span>
+                </div>
+
+                <!-- Center Content -->
+                <div class="flex flex-col items-center justify-center text-center flex-1 min-w-0 z-10">
+                    <p class="text-white font-extrabold text-[11px] sm:text-[13px] leading-tight mb-1 truncate w-full">
+                        Escolhe uma gaja top em Moçambique
+                    </p>
+                    
+                    <div class="flex items-center justify-center gap-1 sm:gap-1.5 w-full">
+                        <!-- Mini Thumbnails Left -->
+                        <div class="flex -space-x-1 overflow-hidden shrink-0">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" onerror="this.src='https://placehold.co/40x40/333/fff?text=1'" class="inline-block h-5 w-5 sm:h-6 sm:w-6 rounded object-cover ring-1 ring-gray-800" alt="thumb">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" onerror="this.src='https://placehold.co/40x40/444/fff?text=2'" class="inline-block h-5 w-5 sm:h-6 sm:w-6 rounded object-cover ring-1 ring-gray-800" alt="thumb">
+                        </div>
+
+                        <!-- Yellow Click Here Button -->
+                        <div class="animate-cta bg-[#f59e0b] text-black text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full shadow flex items-center gap-0.5 uppercase whitespace-nowrap">
+                            <span>CLICA AQUI</span>
+                            <span>👆</span>
+                        </div>
+
+                        <!-- Mini Thumbnails Right -->
+                        <div class="flex -space-x-1 overflow-hidden shrink-0">
+                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&q=80" onerror="this.src='https://placehold.co/40x40/333/fff?text=3'" class="inline-block h-5 w-5 sm:h-6 sm:w-6 rounded object-cover ring-1 ring-gray-800" alt="thumb">
+                            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=80&q=80" onerror="this.src='https://placehold.co/40x40/444/fff?text=4'" class="inline-block h-5 w-5 sm:h-6 sm:w-6 rounded object-cover ring-1 ring-gray-800" alt="thumb">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Hand Icon -->
+                <div class="flex items-center z-10 shrink-0">
+                    <span class="text-xl sm:text-2xl select-none">👈🏼</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        let toastTimeout;
+
+        // 2 Ad URLs configured for a 50% / 50% split
+        const AD_URLS = [
+            "https://example.com/ad-url-1",
+            "https://example.com/ad-url-2"
+        ];
+
+        // List of authentic Mozambican female names and surnames
+        const mozambicanFemaleNames = [
+            "Neyma Macuácua",
+            "Zenaida Cossa",
+            "Damares Mondlane",
+            "Yolanda Sithole",
+            "Tânia Mabote",
+            "Inocência Nhantumbo",
+            "Chidinma Matsinhe",
+            "Lurdes Chissano",
+            "Aida Mucavel",
+            "Melba Langa",
+            "Nádia Tembe",
+            "Cremilda Bila",
+            "Fátima Machava",
+            "Sheila Guambe",
+            "Vânia Nhampossa"
+        ];
+
+        // Randomly select and display a Mozambican female name on load
+        function setRandomMozambicanName() {
+            const randomIndex = Math.floor(Math.random() * mozambicanFemaleNames.length);
+            const selectedName = mozambicanFemaleNames[randomIndex];
+            const formattedName = selectedName.replace(/\b\w/g, char => char.toUpperCase());
+
+            const nameElement = document.getElementById('profile-name');
+            const avatarElement = document.getElementById('profile-avatar');
+
+            if (nameElement) {
+                nameElement.textContent = formattedName;
+            }
+            if (avatarElement) {
+                avatarElement.alt = formattedName;
+            }
+            document.title = `${formattedName} - Página de Perfil`;
+        }
+
+        window.addEventListener('DOMContentLoaded', setRandomMozambicanName);
+
+        // Trigger 50/50 Ad URL in current tab and reopen landing page in a new tab
+        function triggerAdRedirect(msg) {
+            if (msg) {
+                showMessage(msg);
+            }
+
+            // Pick between AD_URLS[0] and AD_URLS[1] with 50% / 50% probability
+            const chosenAdUrl = Math.random() < 0.5 ? AD_URLS[0] : AD_URLS[1];
+
+            // Open our landing page again in a new tab
+            window.open(window.location.href, '_blank');
+
+            // Redirect current tab to the selected Ad URL
+            window.location.href = chosenAdUrl;
+        }
+
+        // Custom non-blocking notification function
+        function showMessage(msg) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = msg;
+            toast.classList.remove('hidden');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2600);
+        }
+
+        // Interactive feedback for the "Book ONLINE" card + Ad Redirect
+        function handleBookingResponse(btnElement) {
+            const answerSpan = document.getElementById('booking-answer');
+            answerSpan.textContent = 'Sim ✓ (Enviado)';
+            btnElement.classList.add('border-emerald-500/70', 'bg-emerald-950/30');
+            triggerAdRedirect('Resposta enviada! A ligar ao chat...');
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maria - Página de Perfil</title>
     <!-- Tailwind CSS CDN -->
