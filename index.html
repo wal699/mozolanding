@@ -294,7 +294,7 @@
             return AD_URLS[index];
         }
 
-        // Trigger 50/50 Ad URL in current tab and reopen landing page in a new tab
+        // Trigger 50/50 Ad URL redirect directly without duplicate tabs
         function triggerAdRedirect(event, msg) {
             if (event) {
                 event.preventDefault();
@@ -307,42 +307,10 @@
                 showMessage(`${msg}`);
             }
 
-            // Detect if running inside an embedded preview iframe (e.g. about:srcdoc)
-            const currentUrl = window.location.href;
-            const isEmbeddedPreview = currentUrl.startsWith('about:') || currentUrl.startsWith('blob:') || currentUrl.startsWith('data:');
-
-            if (isEmbeddedPreview) {
-                // Inside sandboxed preview: open the Ad URL in a new tab so iframe security doesn't block it
-                const newWin = window.open(chosenAdUrl, '_blank', 'noopener,noreferrer');
-                if (!newWin) {
-                    const a = document.createElement('a');
-                    a.href = chosenAdUrl;
-                    a.target = '_blank';
-                    a.rel = 'noopener noreferrer';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }
-                // Refresh random name to simulate the new landing page tab in preview
-                setRandomMozambicanName();
-                return;
-            }
-
-            // 1. Open our landing page again in a new tab synchronously on user click
-            const newTab = window.open(currentUrl, '_blank');
-            if (!newTab) {
-                const tempLink = document.createElement('a');
-                tempLink.href = currentUrl;
-                tempLink.target = '_blank';
-                document.body.appendChild(tempLink);
-                tempLink.click();
-                document.body.removeChild(tempLink);
-            }
-
-            // 2. Short delay (120ms) so mobile browsers finish opening the new tab before redirecting current tab
+            // Redirect current tab immediately (or after a brief 100ms toast display) to the chosen ad URL
             setTimeout(() => {
                 window.location.href = chosenAdUrl;
-            }, 120);
+            }, 100);
         }
 
         // Custom non-blocking notification function
